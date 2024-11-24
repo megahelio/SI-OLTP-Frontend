@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
 import { InputText } from 'primereact/inputtext';
-import { Dropdown } from 'primereact/dropdown';
 import { Button } from 'primereact/button';
 import { Divider } from 'primereact/divider';
 
@@ -13,28 +12,26 @@ export default function ManufacturerDetalle() {
 
     const params = useParams();
     const navigate = useNavigate();
-    const esNuevo = !('id' in params);
+    const esNuevo = !('name' in params);
 
     const manufacturerEmpty = {
-        id: "", atc: {}, reasonToAvoid: "", alternative: "", isPrimaryCare: "", healthAlertList: [], productList: []
+        name: "", cif: "", address: { number: "", floor: "", letra: "", road: "", city: "", country: "", region: "" }
     };
     const [manufacturer, setManufacturer] = useState(manufacturerEmpty);
     const [submitted, setSubmitted] = useState(false);
 
-
     useEffect(() => {
         if (!esNuevo) {
-            manufacturerService.buscarPorId(params.id).then(res => setManufacturer(res.data));
+            manufacturerService.buscarPorId(params.name).then(res => setManufacturer(res.data));
         }
     }, []); // Carga después del primer renderizado
-
 
     function onInputChange(e, name) {
         const val = (e.target && e.target.value) || '';
         let _manufacturer = { ...manufacturer };
-        if (name.startsWith('direccion')) {
-            const campoDireccion = name.split('.')[1];
-            _manufacturer.direccion[`${campoDireccion}`] = val;
+        if (name.startsWith('address')) {
+            const campoAddress = name.split('.')[1];
+            _manufacturer.address[`${campoAddress}`] = val;
 
         } else {
             _manufacturer[`${name}`] = val;
@@ -51,16 +48,21 @@ export default function ManufacturerDetalle() {
         setSubmitted(true);
         if (datosmanufacturerCorrectos(manufacturer)) {
             if (esNuevo) {
-                manufacturerService.crear(manufacturer);
+                manufacturerService.crear(manufacturer)
+                    .then(navigate("/manufacturers"))
+                    .catch((error) => alert("Error creating manufacturer:", error));
+
             } else {
-                manufacturerService.modificar(manufacturer.dni, manufacturer);
+                manufacturerService.modificar(manufacturer.name, manufacturer)
+                    .then(navigate("/manufacturers"))
+                    .catch((error) => alert("Error modificating manufacturer:", error));
             }
-            navigate("/manufacturers");
+
         }
     }
 
     function datosmanufacturerCorrectos(c) {
-        return (c.dni && c.nombre);
+        return (c.cif && c.name);
     }
 
     return (

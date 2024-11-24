@@ -36,7 +36,7 @@ export default function ManufacturerListado(props) {
 
     function editarManufacturer(manufacturer) {
         // setManufacturerActual(manufacturer); // no necesario
-        navigate(manufacturer.dni); // navega a URL del manufacturer
+        navigate(manufacturer.name); // navega a URL del manufacturer
     }
 
     function confirmarBorradoManufacturer(manufacturer) {
@@ -45,7 +45,7 @@ export default function ManufacturerListado(props) {
     }
 
     function borrarManufacturer() {
-        manufacturerService.eliminar(manufacturerActual.dni).catch((err) => { //Captura error en peticion HTTP
+        manufacturerService.eliminar(manufacturerActual.name).catch((err) => { //Captura error en peticion HTTP
             alert("Error borrando entidad.\n"+err.message);
         });
         ocultarDialogoBorrado();
@@ -128,7 +128,7 @@ export default function ManufacturerListado(props) {
                 footer={pieDialogoBorrado} onHide={ocultarDialogoBorrado}>
                 <div className="flex align-items-center justify-content-center">
                     <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                    {manufacturerActual && <span>Confirmar el borrado de <b>{manufacturerActual.nombre}</b>?</span>}
+                    {manufacturerActual && <span>Confirmar el borrado de <b>{manufacturerActual.name}</b>?</span>}
                 </div>
             </Dialog>
 

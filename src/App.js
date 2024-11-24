@@ -42,7 +42,7 @@ function App() {
             <Route path="manufacturers" >
               <Route index element={<ManufacturerListado />} />
               <Route path="nuevo" element={<ManufacturerDetalle />} />
-              <Route path=":cif" element={<ManufacturerDetalle />} />
+              <Route path=":name" element={<ManufacturerDetalle />} />
             </Route>
             </Routes>
         </div>
