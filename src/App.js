@@ -11,6 +11,8 @@ import DrugListado from "./components/drugs/drugListado";
 import DrugDetalle from "./components/drugs/drugDetalle";
 import ManufacturerDetalle from "./components/manufacturers/manufacturerDetalle";
 import ManufacturerListado from "./components/manufacturers/manufacturerListado";
+import PublicationDetalle from "./components/publications/publicationDetalle";
+import PublicationListado from "./components/publications/publicationListado";
 
 import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
@@ -28,6 +30,7 @@ function App() {
           <NavLink to="/" className="px-5 py-3 no-underline text-900 text-xl border-bottom-2 border-300 hover:border-500">Home</NavLink>
           <NavLink to="/drugs" className="px-5 py-3 no-underline text-700 text-xl border-bottom-2 border-300 hover:border-500">Drugs</NavLink>
           <NavLink to="/manufacturers" className="px-5 py-3 no-underline text-700 text-xl border-bottom-2 border-300 hover:border-500">Manufacturers</NavLink>
+          <NavLink to="/publications" className="px-5 py-3 no-underline text-700 text-xl border-bottom-2 border-300 hover:border-500">Publications</NavLink>
         </nav>
 
         <div className="p-5">
@@ -43,6 +46,12 @@ function App() {
               <Route index element={<ManufacturerListado />} />
               <Route path="nuevo" element={<ManufacturerDetalle />} />
               <Route path=":name" element={<ManufacturerDetalle />} />
+            </Route>
+
+            <Route path="publications" >
+              <Route index element={<PublicationListado />} />
+              <Route path="nuevo" element={<PublicationDetalle />} />
+              <Route path=":id" element={<PublicationDetalle />} />
             </Route>
             </Routes>
         </div>
