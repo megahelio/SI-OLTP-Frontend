@@ -13,6 +13,10 @@ import ManufacturerDetalle from "./components/manufacturers/manufacturerDetalle"
 import ManufacturerListado from "./components/manufacturers/manufacturerListado";
 import PublicationDetalle from "./components/publications/publicationDetalle";
 import PublicationListado from "./components/publications/publicationListado";
+import ProductDetalle from "./components/products/productDetalle";
+import ProductListado from "./components/products/productListado";
+import AlertDetalle from "./components/alerts/alertDetalle";
+import AlertListado from "./components/alerts/alertListado";
 
 import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.min.css';
@@ -31,6 +35,8 @@ function App() {
           <NavLink to="/drugs" className="px-5 py-3 no-underline text-700 text-xl border-bottom-2 border-300 hover:border-500">Drugs</NavLink>
           <NavLink to="/manufacturers" className="px-5 py-3 no-underline text-700 text-xl border-bottom-2 border-300 hover:border-500">Manufacturers</NavLink>
           <NavLink to="/publications" className="px-5 py-3 no-underline text-700 text-xl border-bottom-2 border-300 hover:border-500">Publications</NavLink>
+          <NavLink to="/products" className="px-5 py-3 no-underline text-700 text-xl border-bottom-2 border-300 hover:border-500">Products</NavLink>
+          <NavLink to="/alerts" className="px-5 py-3 no-underline text-700 text-xl border-bottom-2 border-300 hover:border-500">Alerts</NavLink>
         </nav>
 
         <div className="p-5">
@@ -52,6 +58,18 @@ function App() {
               <Route index element={<PublicationListado />} />
               <Route path="nuevo" element={<PublicationDetalle />} />
               <Route path=":id" element={<PublicationDetalle />} />
+            </Route>
+
+            <Route path="products" >
+              <Route index element={<ProductListado />} />
+              <Route path="nuevo" element={<ProductDetalle />} />
+              <Route path=":gtin" element={<ProductDetalle />} />
+            </Route>
+
+            <Route path="alerts" >
+              <Route index element={<AlertListado />} />
+              <Route path="nuevo" element={<AlertDetalle />} />
+              <Route path=":idHealthAlert" element={<AlertDetalle />} />
             </Route>
             </Routes>
         </div>

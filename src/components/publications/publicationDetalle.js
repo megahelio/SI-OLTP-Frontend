@@ -74,7 +74,7 @@ export default function PublicationDetalle() {
                                 value={publication.id || ''}
                                 onChange={(e) => onInputChange(e, 'id')}
                                 placeholder="ID de la publicación"
-                                disabled={true}
+                                readOnly disabled
                             />
                         </div>
                         <div className="p-field">

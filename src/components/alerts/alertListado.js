@@ -9,57 +9,57 @@ import { Dialog } from 'primereact/dialog';
 
 import { useNavigate } from 'react-router-dom';
 
-import publicationService from '../../services/publicationService.js';
+import alertService from '../../services/alertService.js';
 
-export default function PublicationListado(props) {
+export default function AlertListado(props) {
 
     const [textoBusqueda, setTextoBusqueda] = useState("");
-    const [publications, setPublications] = useState(null);
+    const [alerts, setAlerts] = useState(null);
     const [cargando, setCargando] = useState(true);
-    const [publicationActual, setPublicationActual] = useState(null);
+    const [alertActual, setAlertActual] = useState(null);
     const [dialogoBorrado, setDialogoBorrado] = useState(false);
 
     let navigate = useNavigate();
 
 
     useEffect(() => {
-        publicationService.buscarTodos().then(res => {
-            setPublications(res.data);
+        alertService.buscarTodos().then(res => {
+            setAlerts(res.data);
             setCargando(false);
         });
     }, [dialogoBorrado]); // vincula la recarga a cambios en dialogoBorrado (para forzar la recarga despues de un borrado)
 
 
-    function nuevoPublication() {
-        navigate("nuevo"); // navega a URL para creacion de nuevo publication
+    function nuevoAlert() {
+        navigate("nuevo"); // navega a URL para creacion de nuevo alert
     }
 
-    function editarPublication(publication) {
-        // setPublicationActual(publication); // no necesario
-        navigate(publication.id); // navega a URL del publication
+    function editarAlert(alert) {
+        // setAlertActual(alert); // no necesario
+        navigate(alert.idHealthAlert.toString()); // navega a URL del alert
     }
 
-    function confirmarBorradoPublication(publication) {
-        setPublicationActual(publication);
+    function confirmarBorradoAlert(alert) {
+        setAlertActual(alert);
         setDialogoBorrado(true);
     }
 
-    function borrarPublication() {
-        publicationService.eliminar(publicationActual.id).catch((err) => { //Captura error en peticion HTTP
+    function borrarAlert() {
+        alertService.eliminar(alertActual.idHealthAlert).catch((err) => { //Captura error en peticion HTTP
             alert("Error borrando entidad.\n" + err.message);
         });
         ocultarDialogoBorrado();
     }
 
     function ocultarDialogoBorrado() {
-        setPublicationActual(null);
+        setAlertActual(null);
         setDialogoBorrado(false);
     }
 
     function buscarTodos() {
         setCargando(true);
-        publicationService.buscarTodos().then(res => {
-            setPublications(res.data);
+        alertService.buscarTodos().then(res => {
+            setAlerts(res.data);
             setCargando(false);
         });
     }
@@ -68,11 +68,11 @@ export default function PublicationListado(props) {
         setTextoBusqueda(e.target.value);
     }
 
-    function accionesPublication(rowData) {
+    function accionesAlert(rowData) {
         return (
             <React.Fragment>
-                <Button icon="pi pi-pencil" className="p-button-rounded p-button-success mr-2" onClick={() => editarPublication(rowData)} tooltip="Ver/editar el publication" />
-                <Button icon="pi pi-trash" className="p-button-rounded p-button-danger" onClick={() => confirmarBorradoPublication(rowData)} tooltip="Eliminar el publication" />
+                <Button icon="pi pi-pencil" className="p-button-rounded p-button-success mr-2" onClick={() => editarAlert(rowData)} tooltip="Ver/editar el alert" />
+                <Button icon="pi pi-trash" className="p-button-rounded p-button-danger" onClick={() => confirmarBorradoAlert(rowData)} tooltip="Eliminar el alert" />
             </React.Fragment>
         );
     }
@@ -90,13 +90,13 @@ export default function PublicationListado(props) {
     const pieDialogoBorrado = (
         <React.Fragment>
             <Button label="No" icon="pi pi-times" className="p-button-text" onClick={ocultarDialogoBorrado} />
-            <Button label="Si" icon="pi pi-check" className="p-button-text" onClick={borrarPublication} />
+            <Button label="Si" icon="pi pi-check" className="p-button-text" onClick={borrarAlert} />
         </React.Fragment>
     );
 
     return (
         <div>
-            <div className="text-3xl text-800 font-bold mb-4">Listado de publications</div>
+            <div className="text-3xl text-800 font-bold mb-4">Listado de alerts</div>
 
             <div className="grid">
                 <InputText id="busqueda" className="col-6 mr-2" onChange={onBusquedaChange} />
@@ -105,18 +105,18 @@ export default function PublicationListado(props) {
 
 
             <div className="flex justify-content-end">
-                <Button label="Nuevo publication" icon="pi pi-plus" className="p-button-lg" onClick={nuevoPublication} tooltip="Crear un nuevo publication" tooltipOptions={{ position: 'bottom' }} />
+                <Button label="Nuevo alert" icon="pi pi-plus" className="p-button-lg" onClick={nuevoAlert} tooltip="Crear un nuevo alert" tooltipOptions={{ position: 'bottom' }} />
             </div>
 
 
             {cargando && <div> <ProgressSpinner /> Cargando... </div>}
 
             <div className="surface-card p-4 border-round shadow-2">
-                <DataTable value={publications} responsiveLayout="scroll" stripedRows emptyMessage="No hay publications que mostrar">
-                    {/* <Column field="id" header="ID" sortable/> */}
-                    <Column field="year" header="Year" sortable />
-                    <Column header="Enlace" body={(rawData) => enlaceTemplate(rawData.publicationLink)} sortable />
-                    <Column body={accionesPublication} />
+                <DataTable value={alerts} responsiveLayout="scroll" stripedRows emptyMessage="No hay alerts que mostrar">
+                    <Column field="idHealthAlert" header="idHealthAlert" sortable />
+                    <Column field="organization" header="Organización" sortable />
+                    <Column header="Enlace" body={(rawData) => enlaceTemplate(rawData.alertLink)} sortable />
+                    <Column body={accionesAlert} />
                 </DataTable>
 
             </div>
@@ -125,7 +125,7 @@ export default function PublicationListado(props) {
                 footer={pieDialogoBorrado} onHide={ocultarDialogoBorrado}>
                 <div className="flex align-items-center justify-content-center">
                     <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                    {publicationActual && <span>Confirmar el borrado de <b>{publicationActual.year}</b>?</span>}
+                    {alertActual && <span>Confirmar el borrado de <b>{alertActual.idHealthAlert}</b>?</span>}
                 </div>
             </Dialog>
 
