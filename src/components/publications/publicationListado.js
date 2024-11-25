@@ -36,7 +36,7 @@ export default function PublicationListado(props) {
 
     function editarPublication(publication) {
         // setPublicationActual(publication); // no necesario
-        navigate(publication.id); // navega a URL del publication
+        navigate(publication.id.toString()); // navega a URL del publication
     }
 
     function confirmarBorradoPublication(publication) {

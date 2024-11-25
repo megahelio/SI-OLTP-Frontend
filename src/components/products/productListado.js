@@ -104,8 +104,7 @@ export default function ProductListado(props) {
                 <DataTable value={products} responsiveLayout="scroll" stripedRows emptyMessage="No hay products que mostrar">
                     <Column field="gtin" header="GTIN" sortable />
                     <Column field="name" header="Nombre" sortable />
-                    <Column field="units" header="Units" sortable />
-                    <Column field="mgs" header="MGS" sortable />
+                    <Column field="manufacturer.name" header="Fabricante" sortable />
                     <Column body={accionesProduct} />
                 </DataTable>
 
