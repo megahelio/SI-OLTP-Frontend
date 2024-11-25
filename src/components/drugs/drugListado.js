@@ -36,7 +36,7 @@ export default function DrugListado(props) {
 
     function editarDrug(drug) {
         // setDrugActual(drug); // no necesario
-        navigate(drug.dni); // navega a URL del drug
+        navigate(drug.id.toString()); // navega a URL del drug
     }
 
     function confirmarBorradoDrug(drug) {
@@ -45,7 +45,7 @@ export default function DrugListado(props) {
     }
 
     function borrarDrug() {
-        drugService.eliminar(drugActual.dni).catch((err) => { //Captura error en peticion HTTP
+        drugService.eliminar(drugActual.id).catch((err) => { //Captura error en peticion HTTP
             alert("Error borrando entidad.\n"+err.message);
         });
         ocultarDialogoBorrado();
@@ -63,15 +63,6 @@ export default function DrugListado(props) {
             setCargando(false);
         });
     }
-
-    function buscarPorLocalidad() {
-        setCargando(true);
-        drugService.buscarPorLocalidad(textoBusqueda).then(res => {
-            setDrugs(res.data);
-            setCargando(false);
-        });
-    }
-
     function buscarTodos() {
         setCargando(true);
         drugService.buscarTodos().then(res => {
@@ -122,8 +113,8 @@ export default function DrugListado(props) {
 
             <div className="surface-card p-4 border-round shadow-2">
                 <DataTable value={drugs} responsiveLayout="scroll" stripedRows emptyMessage="No hay drugs que mostrar">
-                    <Column field="atc.subgrupoQuimico" header="ATC" sortable/>
-                    <Column field="atc.principioActivo" header="Principio Activo" sortable />
+                    <Column field="atc" header="ATC" sortable/>
+                    <Column field="activePrinciple" header="Principio Activo" sortable />
                     <Column field="reasonToAvoid" header="Razón para evitar"/>
                     <Column field="alternative" header="Alternativa" />
                     <Column field="isPrimaryCare" header="Atención Primaria?" sortable />
@@ -135,7 +126,7 @@ export default function DrugListado(props) {
                 footer={pieDialogoBorrado} onHide={ocultarDialogoBorrado}>
                 <div className="flex align-items-center justify-content-center">
                     <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
-                    {drugActual && <span>Confirmar el borrado de <b>{drugActual.nombre}</b>?</span>}
+                    {drugActual && <span>Confirmar el borrado de <b>{drugActual.activePrinciple}</b>?</span>}
                 </div>
             </Dialog>
 

@@ -115,8 +115,9 @@ export default function AlertListado(props) {
                 <DataTable value={alerts} responsiveLayout="scroll" stripedRows emptyMessage="No hay alerts que mostrar">
                     <Column field="idHealthAlert" header="idHealthAlert" sortable />
                     <Column field="organization" header="Organización" sortable />
+                    <Column field="drug.activePrinciple" header="Principio Activo" sortable />
                     <Column header="Enlace" body={(rawData) => enlaceTemplate(rawData.alertLink)} sortable />
-                    <Column body={accionesAlert} />
+                    <Column body={accionesAlert} /> 
                 </DataTable>
 
             </div>

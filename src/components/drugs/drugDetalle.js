@@ -16,7 +16,7 @@ export default function DrugDetalle() {
     const esNuevo = !('id' in params);
 
     const drugEmpty = {
-        id: "", atc: {}, reasonToAvoid: "", alternative: "", isPrimaryCare: "", healthAlertList: [], productList: []
+        id: null, activePrinciple: "", atc: "", reasonToAvoid: "", alternative: "", isPrimaryCare: null
     };
     const [drug, setDrug] = useState(drugEmpty);
     const [submitted, setSubmitted] = useState(false);
@@ -32,13 +32,13 @@ export default function DrugDetalle() {
     function onInputChange(e, name) {
         const val = (e.target && e.target.value) || '';
         let _drug = { ...drug };
-        if (name.startsWith('direccion')) {
-            const campoDireccion = name.split('.')[1];
-            _drug.direccion[`${campoDireccion}`] = val;
-
-        } else {
-            _drug[`${name}`] = val;
-        }
+        _drug[`${name}`] = val;
+        setDrug(_drug);
+    }
+    function onIsPrimaryCareChange(e){
+        const val = e.target.value;
+        let _drug = { ...drug };
+        _drug["isPrimaryCare"] = val;
         setDrug(_drug);
     }
 
@@ -53,14 +53,15 @@ export default function DrugDetalle() {
             if (esNuevo) {
                 drugService.crear(drug);
             } else {
-                drugService.modificar(drug.dni, drug);
+                drugService.modificar(drug.id, drug);
             }
             navigate("/drugs");
         }
     }
 
     function datosdrugCorrectos(c) {
-        return (c.dni && c.nombre);
+        return (c.atc && c.activePrinciple && c.reasonToAvoid &&
+            c.alternative);
     }
 
     return (
@@ -72,38 +73,44 @@ export default function DrugDetalle() {
                 <form onSubmit={handleSubmit} >
                     <div className="p-fluid">
                         <div className="p-fluid">
-                           
-
-                            {/* ATC */}
+                            <div className="p-field">
+                                <label htmlFor="id">ID</label>
+                                <InputText
+                                    id="id"
+                                    value={drug.id || ''}
+                                    onChange={(e) => onInputChange(e, 'id')}
+                                    placeholder="ID"
+                                    readOnly disabled
+                                />
+                            </div>
+                            <div className="p-field">
+                                <label htmlFor="activePrinciple">Principio Activo</label>
+                                <InputText
+                                    id="activePrinciple"
+                                    value={drug.activePrinciple || ''}
+                                    onChange={(e) => onInputChange(e, 'activePrinciple')}
+                                    placeholder="Principio Activo"
+                                    required
+                                />
+                            </div>
                             <div className="p-field">
                                 <label htmlFor="atc">ATC</label>
                                 <InputText
-                                    id="grupoAnatomicoPrincipal"
-                                    value={drug.atc?.grupoAnatomicoPrincipal || ''}
-                                    onChange={(e) => onInputChange(e, 'atc.grupoAnatomicoPrincipal')}
-                                    placeholder="Grupo Anatómico Principal"
-                                />
-                                <InputText
-                                    id="subgrupoTerapeutico"
-                                    value={drug.atc?.subgrupoTerapeutico || ''}
-                                    onChange={(e) => onInputChange(e, 'atc.subgrupoTerapeutico')}
-                                    placeholder="Subgrupo Terapéutico"
-                                />
-                                <InputText
-                                    id="principioActivo"
-                                    value={drug.atc?.principioActivo || ''}
-                                    onChange={(e) => onInputChange(e, 'atc.principioActivo')}
-                                    placeholder="Principio Activo"
+                                    id="atc"
+                                    value={drug.atc || ''}
+                                    onChange={(e) => onInputChange(e, 'atc')}
+                                    placeholder="ATC"
+                                    required
                                 />
                             </div>
-
-                            {/* Razones y Alternativa */}
                             <div className="p-field">
                                 <label htmlFor="reasonToAvoid">Razón para evitar</label>
                                 <InputText
                                     id="reasonToAvoid"
                                     value={drug.reasonToAvoid || ''}
                                     onChange={(e) => onInputChange(e, 'reasonToAvoid')}
+                                    placeholder="Razón para evitar"
+                                    required
                                 />
                             </div>
                             <div className="p-field">
@@ -112,6 +119,8 @@ export default function DrugDetalle() {
                                     id="alternative"
                                     value={drug.alternative || ''}
                                     onChange={(e) => onInputChange(e, 'alternative')}
+                                    placeholder="Alternativa"
+                                    required
                                 />
                             </div>
                             <div className="p-field">
@@ -123,35 +132,12 @@ export default function DrugDetalle() {
                                         { label: 'Sí', value: true },
                                         { label: 'No', value: false },
                                     ]}
-                                    onChange={(e) => onInputChange(e, 'isPrimaryCare')}
+                                    onChange={(e) => onIsPrimaryCareChange(e)}
                                     placeholder="Seleccione una opción"
+                                    required
                                 />
                             </div>
 
-
-                            {/* Alertas */}
-                            <div className="p-field">
-                                <label>Alertas Sanitarias</label>
-                                {drug.healthAlertList?.map((alert, index) => (
-                                    <div key={index} className="p-mb-3">
-                                        <span>{alert.organization}</span>
-                                        <a href={alert.alertLink} target="_blank" rel="noopener noreferrer">
-                                            Ver alerta
-                                        </a>
-                                    </div>
-                                ))}
-                            </div>
-
-                            {/* Productos */}
-                            <div className="p-field">
-                                <label>Productos</label>
-                                {drug.productList?.map((product, index) => (
-                                    <div key={index} className="p-mb-3">
-                                        <span>{product.name} ({product.units} unidades, {product.mgs}mg)</span>
-                                        <span> - Fabricante: {product.manufacturer.name}</span>
-                                    </div>
-                                ))}
-                            </div>
                         </div>
 
                     </div>

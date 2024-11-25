@@ -6,19 +6,19 @@ class DrugService {
   }
 
   buscarPorId(id) {
-    return api.get(`/drug/${id}`);
+    return api.get(`/drugs/${id}`);
   }
 
   crear(data) {
-    return api.post("/drug", data);
+    return api.post("/drugs", data);
   }
 
   modificar(id, data) {
-    return api.put(`/drug/${id}`, data);
+    return api.put(`/drugs/${id}`, data);
   }
 
   eliminar(id) {
-    return api.delete(`/drug/${id}`);
+    return api.delete(`/drugs/${id}`);
   }
 
 }

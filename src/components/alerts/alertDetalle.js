@@ -3,10 +3,13 @@ import React, { useState, useEffect } from 'react';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Divider } from 'primereact/divider';
+import { Dropdown } from 'primereact/dropdown';
+
 
 import { useParams, useNavigate } from "react-router-dom";
 
 import alertService from '../../services/alertService';
+import drugService from '../../services/drugService';
 
 export default function AlertDetalle() {
 
@@ -17,21 +20,45 @@ export default function AlertDetalle() {
     const alertEmpty = {
         idHealthAlert: null,
         alertLink: "",
-        organization: ""
-    };
+        organization: "",
+        drug: {
+            id: null,
+            activePrinciple: "",
+            atc: "",
+            reasonToAvoid: "",
+            alternative: "",
+            isPrimaryCare: null
+        }
+
+    }
+
     const [alert, setAlert] = useState(alertEmpty);
     const [submitted, setSubmitted] = useState(false);
+    const [drugs, setDrugs] = useState([]);
+    const [activePrinciples, setActivePrinciples] = useState([]);
 
     useEffect(() => {
         if (!esNuevo) {
             alertService.buscarPorId(params.idHealthAlert).then(res => setAlert(res.data));
         }
+        drugService.buscarTodos().then(res => {
+            const activePrinciples = res.data.map(drug => drug.activePrinciple);
+            setDrugs(res.data);
+            setActivePrinciples(activePrinciples);
+            console.log(res);
+        });
     }, []); // Carga después del primer renderizado
 
     function onInputChange(e, name) {
         const val = (e.target && e.target.value) || '';
         let _alert = { ...alert };
         _alert[`${name}`] = val;
+        setAlert(_alert);
+    }
+
+    function onDrugChange(e) {
+        let _alert = { ...alert };
+        _alert.drug = drugs.find(drug => drug.activePrinciple === e.value);
         setAlert(_alert);
     }
 
@@ -49,7 +76,7 @@ export default function AlertDetalle() {
                     .catch((error) => alert("Error creating alert:", error));
 
             } else {
-                alertService.modificar(alert.idhealthalert, alert)
+                alertService.modificar(alert.idHealthAlert, alert)
                     .then(navigate("/alerts"))
                     .catch((error) => alert("Error modificating alert:", error));
             }
@@ -101,6 +128,11 @@ export default function AlertDetalle() {
                             />
                         </div>
                     </div>
+                    <div className="p-field">
+                        <label htmlFor="drug">Drug</label>
+                        <Dropdown value={alert.drug?.activePrinciple} options={activePrinciples} onChange={onDrugChange} optionLabel="principioActivo"
+                            filter showClear filterBy="principioActivo" placeholder="Seleccionar drug" />
+                    </div>
                     <Divider />
                     <div className="p-p-3">
                         <Button label="Cancelar" icon="pi pi-times" className="p-button-outlined mr-2" onClick={onCancelar} />
@@ -110,4 +142,5 @@ export default function AlertDetalle() {
             </div>
         </div>
     );
+
 }
