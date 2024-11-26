@@ -8,6 +8,9 @@ class PublicationService {
     buscarPorId(id) {
         return api.get(`/prescrire-publications/${id}`);
     }
+    buscarPorYear(year) {
+        return api.get(`/prescrire-publications?year=${year}`);
+    }
     crear(data) {
         return api.post("/prescrire-publications", data);
     }

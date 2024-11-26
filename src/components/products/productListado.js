@@ -63,6 +63,13 @@ export default function ProductListado(props) {
             setCargando(false);
         });
     }
+    function buscarPorNombre() {
+        setCargando(true);
+        productService.buscarPorName(textoBusqueda).then(res => {
+            setProducts(res.data);
+            setCargando(false);
+        });
+    }
 
     function onBusquedaChange(e) {
         setTextoBusqueda(e.target.value);
@@ -89,6 +96,7 @@ export default function ProductListado(props) {
 
             <div className="grid">
                 <InputText id="busqueda" className="col-6 mr-2" onChange={onBusquedaChange} />
+                <Button label="Buscar por nombre" className="col-1 mr-2" onClick={buscarPorNombre} />
                 <Button label="Buscar todos" className="col-1 mr-2" onClick={buscarTodos} />
             </div>
 

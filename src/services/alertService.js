@@ -7,6 +7,9 @@ class AlertService {
     buscarPorId(id) {
         return api.get(`/health-alerts/${id}`);
     }
+    buscarPorOrg(org) {
+        return api.get(`/health-alerts?organization=${org}`);
+    }
     crear(data) {
         return api.post("/health-alerts", data);
     }

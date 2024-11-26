@@ -63,6 +63,14 @@ export default function AlertListado(props) {
             setCargando(false);
         });
     }
+    function buscarPorOrg() {
+        setCargando(true);
+        alertService.buscarPorOrg(textoBusqueda).then(res => {
+            setAlerts(res.data);
+            setCargando(false);
+        })
+        .catch();
+    }
 
     function onBusquedaChange(e) {
         setTextoBusqueda(e.target.value);
@@ -100,6 +108,7 @@ export default function AlertListado(props) {
 
             <div className="grid">
                 <InputText id="busqueda" className="col-6 mr-2" onChange={onBusquedaChange} />
+                <Button label="Buscar por Organización" className="col-1 mr-2" onClick={buscarPorOrg} />
                 <Button label="Buscar todos" className="col-1 mr-2" onClick={buscarTodos} />
             </div>
 
@@ -117,7 +126,7 @@ export default function AlertListado(props) {
                     <Column field="organization" header="Organización" sortable />
                     <Column field="drug.activePrinciple" header="Principio Activo" sortable />
                     <Column header="Enlace" body={(rawData) => enlaceTemplate(rawData.alertLink)} sortable />
-                    <Column body={accionesAlert} /> 
+                    <Column body={accionesAlert} />
                 </DataTable>
 
             </div>

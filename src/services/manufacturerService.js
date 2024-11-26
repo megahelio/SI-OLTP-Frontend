@@ -11,6 +11,9 @@ class ManufacturerService {
     buscarPorCIF(cif) {
         return api.get(`/manufacturers?cif=${cif}`);
     }
+    buscarPorName(name) {
+        return api.get(`/manufacturers?name=${name}`);
+    }
     crear(data) {
         return api.post("/manufacturers", data);
     }

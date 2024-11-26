@@ -58,7 +58,14 @@ export default function ManufacturerListado(props) {
 
     function buscarPorNombre() {
         setCargando(true);
-        manufacturerService.buscarPorNombre(textoBusqueda).then(res => {
+        manufacturerService.buscarPorName(textoBusqueda).then(res => {
+            setManufacturers(res.data);
+            setCargando(false);
+        });
+    }
+    function buscarPorCIF() {
+        setCargando(true);
+        manufacturerService.buscarPorCIF(textoBusqueda).then(res => {
             setManufacturers(res.data);
             setCargando(false);
         });
@@ -102,6 +109,7 @@ export default function ManufacturerListado(props) {
             <div className="grid">
                 <InputText id="busqueda" className="col-6 mr-2" onChange={onBusquedaChange} />
                 <Button label="Buscar por nombre" className="col-1 mr-2" onClick={buscarPorNombre} />
+                <Button label="Buscar por CIF" className="col-1 mr-2" onClick={buscarPorCIF} />
                 <Button label="Buscar todos" className="col-1 mr-2" onClick={buscarTodos} />
             </div>
 

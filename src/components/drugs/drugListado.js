@@ -56,9 +56,23 @@ export default function DrugListado(props) {
         setDialogoBorrado(false);
     }
 
-    function buscarPorNombre() {
+    function buscarPorActivePrinciple() {
         setCargando(true);
-        drugService.buscarPorNombre(textoBusqueda).then(res => {
+        drugService.buscarPorActivePrinciple(textoBusqueda).then(res => {
+            setDrugs(res.data);
+            setCargando(false);
+        });
+    }
+    function buscarPorAtc() {
+        setCargando(true);
+        drugService.buscarPorAtc(textoBusqueda).then(res => {
+            setDrugs(res.data);
+            setCargando(false);
+        });
+    }
+    function buscarPorIsPrimaryCare() {
+        setCargando(true);
+        drugService.buscarPorIsPrimaryCare(textoBusqueda).then(res => {
             setDrugs(res.data);
             setCargando(false);
         });
@@ -99,7 +113,9 @@ export default function DrugListado(props) {
 
             <div className="grid">
                 <InputText id="busqueda" className="col-6 mr-2" onChange={onBusquedaChange} />
-                <Button label="Buscar por nombre" className="col-1 mr-2" onClick={buscarPorNombre} />
+                <Button label="Buscar por principio activo" className="col-1 mr-2" onClick={buscarPorActivePrinciple} />
+                <Button label="Buscar por atención primaria" className="col-1 mr-2" onClick={buscarPorIsPrimaryCare} />
+                <Button label="Buscar por código anatómico terapéutico (ATC)" className="col-1 mr-2" onClick={buscarPorAtc} />
                 <Button label="Buscar todos" className="col-1 mr-2" onClick={buscarTodos} />
             </div>
 
@@ -114,7 +130,7 @@ export default function DrugListado(props) {
             <div className="surface-card p-4 border-round shadow-2">
                 <DataTable value={drugs} responsiveLayout="scroll" stripedRows emptyMessage="No hay drugs que mostrar">
                     <Column field="atc" header="ATC" sortable/>
-                    <Column field="activePrinciple" header="Principio Activo" sortable />
+                    <Column field="activePrinciple" header="Principio Activo"/>
                     <Column field="reasonToAvoid" header="Razón para evitar"/>
                     <Column field="alternative" header="Alternativa" />
                     <Column field="isPrimaryCare" header="Atención Primaria?" sortable />

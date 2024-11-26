@@ -7,6 +7,10 @@ class ProductService {
     buscarPorId(id) {
         return api.get(`/products/${id}`);
     }
+
+    buscarPorName(name) {
+        return api.get(`/products?=name=${name}`);
+    }
     crear(data) {
         return api.post("/products", data);
     }

@@ -62,7 +62,15 @@ export default function PublicationListado(props) {
             setPublications(res.data);
             setCargando(false);
         });
+    } 
+    function buscarPorYear() {
+        setCargando(true);
+        publicationService.buscarPorYear(textoBusqueda).then(res => {
+            setPublications(res.data);
+            setCargando(false);
+        });
     }
+    
 
     function onBusquedaChange(e) {
         setTextoBusqueda(e.target.value);
@@ -100,6 +108,7 @@ export default function PublicationListado(props) {
 
             <div className="grid">
                 <InputText id="busqueda" className="col-6 mr-2" onChange={onBusquedaChange} />
+                <Button label="Buscar por año" className="col-1 mr-2" onClick={buscarPorYear} />
                 <Button label="Buscar todos" className="col-1 mr-2" onClick={buscarTodos} />
             </div>
 
