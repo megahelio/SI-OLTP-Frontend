@@ -16,6 +16,11 @@
       "src": "logo512.png",
       "type": "image/png",
       "sizes": "512x512"
+    },
+    {
+      "src": "Entidad_Relación.jpg",
+      "type": "image/jpg",
+      "sizes": "577x637"
     }
   ],
   "start_url": ".",
