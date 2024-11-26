@@ -4,10 +4,11 @@ import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Divider } from 'primereact/divider';
 import { Dropdown } from 'primereact/dropdown';
+import { MultiSelect } from 'primereact/multiselect';
 import { useParams, useNavigate } from "react-router-dom";
 import manufacturerService from '../../services/manufacturerService.js';
 import productService from '../../services/productService';
-
+import drugService from '../../services/drugService';
 export default function ProductDetalle() {
 
     const params = useParams();
@@ -17,12 +18,14 @@ export default function ProductDetalle() {
     const productEmpty = {
         gtin: null, name: "", units: null, mgs: null,
         manufacturer: { name: "", cif: "", address: { number: "", floor: "", letra: "", road: "", city: "", country: "", region: "" } },
-        // drug: { id: null, activePrinciple: "", atc: "", reasonToAvoid: "", alternative: "", isPrimaryCare: null }
+        drugList: []
     };
     const [product, setProduct] = useState(productEmpty);
     const [submitted, setSubmitted] = useState(false);
     const [manufacturers, setManufacturer] = useState([]);
     const [manufacturersNameSet, setManufacturerNameSet] = useState([]);
+    
+    const [drugs, setDrugs] = useState([]);
 
     useEffect(() => {
         if (!esNuevo) {
@@ -34,12 +37,18 @@ export default function ProductDetalle() {
             setManufacturerNameSet(nameSet);
             console.log(res);
         });
+        drugService.buscarTodos().then(res => setDrugs(res.data))
     }, []); // Carga después del primer renderizado
 
     function onInputChange(e, name) {
         const val = (e.target && e.target.value) || '';
         let _product = { ...product };
         _product[`${name}`] = val;
+        setProduct(_product);
+    }
+    function onDrugListChange(e) {
+        let _product = { ...product };
+        _product.drugList = e.value;
         setProduct(_product);
     }
     function onManufacturerChange(e){
@@ -120,6 +129,17 @@ export default function ProductDetalle() {
                                 placeholder="Mgs por dosis"
                             />
                         </div>
+                        <div className="p-field">
+                            <label htmlFor="drugIds">Drugs</label>
+                            <MultiSelect id="drugIds"
+                                value={product.drugList}
+                                options={drugs}
+                                onChange={onDrugListChange}
+                                optionLabel="activePrinciple"
+                                placeholder="Select Drugs"
+                                display="chip" filter />
+                        </div>
+
                         <div className="p-field">
                             <label htmlFor="manufacturer">Fabricante</label>
                             <Dropdown value={product.manufacturer.name} options={manufacturersNameSet} onChange={onManufacturerChange} optionLabel="nombre"

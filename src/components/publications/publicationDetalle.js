@@ -3,10 +3,12 @@ import React, { useState, useEffect } from 'react';
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { Divider } from 'primereact/divider';
+import { MultiSelect } from 'primereact/multiselect';
 
 import { useParams, useNavigate } from "react-router-dom";
 
 import publicationService from '../../services/publicationService';
+import drugService from '../../services/drugService';
 
 export default function PublicationDetalle() {
 
@@ -15,21 +17,28 @@ export default function PublicationDetalle() {
     const esNuevo = !('id' in params);
 
     const publicationEmpty = {
-        id: null, year: "", publicationLink: ""
+        id: null, year: "", publicationLink: "", drugList: []
     };
     const [publication, setPublication] = useState(publicationEmpty);
     const [submitted, setSubmitted] = useState(false);
+    const [drugs, setDrugs] = useState([]);
 
     useEffect(() => {
         if (!esNuevo) {
             publicationService.buscarPorId(params.id).then(res => setPublication(res.data));
         }
+        drugService.buscarTodos().then(res => setDrugs(res.data))
     }, []); // Carga después del primer renderizado
 
     function onInputChange(e, name) {
         const val = (e.target && e.target.value) || '';
         let _publication = { ...publication };
         _publication[`${name}`] = val;
+        setPublication(_publication);
+    }
+    function onDrugListChange(e) {
+        let _publication = { ...publication };
+        _publication.drugList = e.value;
         setPublication(_publication);
     }
 
@@ -98,7 +107,18 @@ export default function PublicationDetalle() {
                                 required
                             />
                         </div>
+                        <div className="p-field">
+                            <label htmlFor="drugIds">Drugs</label>
+                            <MultiSelect id="drugIds"
+                                value={publication.drugList}
+                                options={drugs}
+                                onChange={onDrugListChange}
+                                optionLabel="activePrinciple"
+                                placeholder="Select Drugs"
+                                display="chip" filter />
+                        </div>
                     </div>
+
                     <Divider />
                     <div className="p-p-3">
                         <Button label="Cancelar" icon="pi pi-times" className="p-button-outlined mr-2" onClick={onCancelar} />
